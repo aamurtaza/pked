@@ -17,6 +17,18 @@ app.use( cors() );
 app.use ( bodyParser.json() );
 app.use ( bodyParser.urlencoded({ extended: true }));
 
+// Add custom middle to implement psuedo - user authentication 
+// this intercept each request to determine if its authenticated or not.
+// this clarifies the flow of creating by userId
+app.use ( (req, res, next) => {
+    // assuming users[1] is now as "authenticated user" sent from client.
+    req.me = users[1];
+
+    // callback to inform when job is finished
+    // important when middleware uses asynchronous functions
+    next();
+});
+
 // define the resolve handler for the default home page
 // try different HTTP methods with same URI '/' which acts as resource
 app.get( "/", ( req, res ) => {
@@ -114,10 +126,26 @@ app.post( "/messages", (req, res) => {
     let message = {
         id,
         text: req.body.text,
-        userId: req.body.userId,
+        userId: req.me.id,
     }
     // add to our pseudo database
     messages[id] = message;
+    return res.send(message);
+});
+
+// DELETE message by messageId
+app.delete( "/messages/:messageId", (req, res) => {
+    // 'spread syntax' / three dots '...' are used to expand messages object
+    // https://code4developers.com/spread-syntax-in-javascript/ 
+    // the first line extract message by req.params.messageId
+    // where ...OtherMessages is a new object which will carry all other messages
+    const {
+        [req.params.messageId]: message,
+        ...otherMessages
+    } =  messages;
+
+    // assigning otherMessages to messages to simulate DELETE request.
+    messages = otherMessages;
     return res.send(message);
 });
 
