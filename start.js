@@ -3,5 +3,9 @@ require("@babel/register")({
     presets: ["@babel/preset-env"]
   });
   
-  // Import the rest of our application.
-  module.exports = require('./src/index.js')
+// Import the rest of our application.
+module.exports = require('./src/index.js')
+
+// then add 
+// "start": "nodemon start.js",
+// However this seems to be a outdated solution and babel 7+ is already configured in package.json
