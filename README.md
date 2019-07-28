@@ -1,2 +1,4 @@
 # pked
-![Architecture](https://github.com/adnanalimurtaza/pked/tree/master/images/architecture-design.png)
+
+![Architecture](/images/architecture-design.png)
+![Database](/images/database-design.png)
